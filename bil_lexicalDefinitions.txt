@@ -1,0 +1,117 @@
+	int numerolinha=0;
+
+DIGITO		[0-9]	
+VARIAVEL	[a-z][a-z0-9]*
+ESPACO		[\t\r ]
+
+%%
+
+"scalar"|"array"|"string" { 
+				printf(" Token reconhecido! (Tipo de dados): %s\n\n", yytext);
+				return TIPO_DE_DADOS;
+			  }
+
+"/#".*"#/"	/* Ignora comentários */
+
+"//".*"\n"	/* Ignora comentários de uma única linha */
+
+"+"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return MAIS;
+	}
+
+
+"-"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return MENOS;
+	}
+
+
+"*"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);	
+		return VEZES;
+	}
+
+
+"/"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return DIVIDIDO;
+	}
+
+
+"%"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return RESTO;
+	}
+
+
+"="	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return IGUAL;
+	}
+
+
+"!"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return EXCLAMACAO;
+	}
+
+
+"<"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return MENOR;
+	}
+
+">"	{
+		printf(" Token reconhecido! (Operador): %s\n\n", yytext);
+		return MAIOR;
+	}
+
+
+","|";"|"{"|"}" { 
+				printf(" Token reconhecido! (Separador): %s\n\n", yytext);
+				return SEPARADOR; 
+		}
+
+"(" 	{
+		printf(" Token reconhecido! (Separador): %s\n\n", yytext);
+		return ABRE_PARENTESE; 
+	}
+
+")"	{
+		printf(" Token reconhecido! (Separador): %s\n\n", yytext);
+		return FECHA_PARENTESE; 
+	}
+
+
+if|then|begin|while|read|end|print|procedure|function {
+							 printf(" Token reconhecido! (Palavra-chave): %s\n\n", yytext); 
+							 return PALAVRA_CHAVE;
+						      }
+
+{DIGITO}+ { 
+		printf(" Token reconhecido (Inteiro): %s\n\n", yytext);
+		return INTEIRO;
+	  }
+
+{DIGITO}+"."{DIGITO}* { 
+				printf(" Token reconhecido! (Real): %s\n\n", yytext);
+				return REAL;
+		      }
+
+{VARIAVEL}+ {
+		printf(" Token reconhecido! (Variavel): %s\n\n", yytext);
+		return VARIAVEL;
+	    }
+
+{ESPACO}+	/* Elimina espaços em branco */
+
+{DIGITO}+{VARIAVEL}+ {printf(" ERRO NA LINHA %d >> variavel invalida: %s\n\n", numerolinha, yytext);}
+
+"\n" { numerolinha++;}
+
+. { /* Caractere nao reconhecido */
+    printf(" ERRO NA LINHA %d >> caractere nao reconhecido: %s\n\n", numerolinha, yytext);}
+
+%%
+	
